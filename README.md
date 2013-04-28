@@ -22,7 +22,8 @@ Edit this way:
 
 In the text editor, near to the end add:
 
-%sudo ALL= NOPASSWD: /bin/mount
-%sudo ALL= NOPASSWD: /bin/umount
+`%sudo ALL= NOPASSWD: /bin/mount`
+
+`%sudo ALL= NOPASSWD: /bin/umount`
 
 Feel free to adds others commands for you if needed.

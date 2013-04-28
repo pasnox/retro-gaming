@@ -96,7 +96,7 @@ class UMount {
             
             exec( 'sudo umount "'.$tmpFolder.'" 2>&1', $output, $exitCode );
             
-            if ( (int)( $exitCode ) !== 0 ) {
+            if ( $exitCode !== 0 ) {
                 Tools::echoLine( "A problem occurs when umounting '$tmpFolder' ($baseName): ".NL.implode( NL, $output )."." );
             }
             else {
@@ -108,7 +108,7 @@ class UMount {
                 }
             }
             
-            $ok = (int)( $exitCode ) === 0;
+            $ok = $exitCode === 0;
         }
         else {
             Tools::echoLine( "Skipping not mounted '$tmpFolder' ($baseName)." );

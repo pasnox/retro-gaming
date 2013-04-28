@@ -104,7 +104,7 @@ class Mount {
                 
                 exec( 'sudo mount -o loop,ro -t squashfs "'.$fileName.'" "'.$tmpFolder.'" 2>&1', $output, $exitCode );
                 
-                if ( (int)( $exitCode ) !== 0 ) {
+                if ( $exitCode !== 0 ) {
                     Tools::echoLine( "A problem occurs when mounting '$tmpFolder' ($baseName):".NL.implode( NL, $output )."." );
                     rmdir( $tmpFolder );
                 }
@@ -112,7 +112,7 @@ class Mount {
                     Tools::echoLine( "Successfully mounted '$tmpFolder' ($baseName)." );
                 }
                 
-                $ok = (int)( $exitCode ) === 0;
+                $ok = $exitCode === 0;
             }
         }
         

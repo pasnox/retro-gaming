@@ -297,11 +297,11 @@ class GoodTools {
         
         passthru( $command, $exitCode );
         
-        if ( (int)( $exitCode ) !== 0 ) {
+        if ( $exitCode !== 0 ) {
             Tools::echoLine( $command );
         }
         
-        return (int)( $exitCode ) === 0;
+        return $exitCode === 0;
     }
     
     public function makeSquashFS( Array $options ) {

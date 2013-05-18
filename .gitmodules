@@ -1,0 +1,3 @@
+[submodule "goodtools/sqfs-mounter/src/3rdparty/diskmanager-qt"]
+	path = goodtools/sqfs-mounter/src/3rdparty/diskmanager-qt
+	url = https://pasnox@bitbucket.org/pasnox/diskmanager-qt.git

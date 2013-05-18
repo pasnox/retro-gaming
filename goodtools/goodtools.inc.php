@@ -143,8 +143,12 @@ class GoodToolsBackends {
         return GoodToolsBackends::$_backends;
     }
     
+    public static function hasBackend( $name ) {
+        return array_key_exists( strtoupper( $name ), GoodToolsBackends::$_backends );
+    }
+    
     public static function backend( $name ) {
-        return array_key_exists( $name, GoodToolsBackends::$_backends ) ? GoodToolsBackends::$_backends[ $name ] : null;
+        return array_key_exists( strtoupper( $name ), GoodToolsBackends::$_backends ) ? GoodToolsBackends::$_backends[ strtoupper( $name ) ] : null;
     }
 } 
 ?>

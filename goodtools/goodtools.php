@@ -17,7 +17,6 @@ class GoodTools {
             '-r path, --roms[=] path'.TAB.TAB.TAB.TAB.'Define the path where the roms for your GoodTools will be scaned / organized.',
             '-t tool1,tool2..., --tools[=] tool1,tool2...'.TAB.'Define the list of good tools to execute, default is all.',
             '-m mode, --mode[=] mode'.TAB.TAB.TAB.TAB.'Define the mode to use, default: update.',
-            '-n name, --name[=] name'.TAB.TAB.TAB.TAB.'Define the base name for the squash fs.',
             '',
             'Availables tools: '.implode( ', ', array_keys( GoodToolsBackends::backends() ) ).'.',
             'Availables modes: '.implode( ', ', GoodTools::$_modes ).'.',
@@ -31,13 +30,12 @@ class GoodTools {
     }
     
     public function options() {
-        $shorts = "b:r:t:m:n:";
+        $shorts = "b:r:t:m:";
         $longs = array(
             'binaries:', // compressed good tools archives
             'roms:', // the roms scanned per good tools name
             'tools:', // The good tools to run, default all
             'mode:', // The mode to use
-            'name:', // The base name to use for the squash fs
         );
         
         $opt = getopt( $shorts, $longs );
@@ -56,9 +54,6 @@ class GoodTools {
             }
             else if ( $key == 'm' || $key == 'mode' ) {
                 $options[ 'mode' ] = strtolower( $value );
-            }
-            else if ( $key == 'n' || $key == 'name' ) {
-                $options[ 'name' ] = $value;
             }
         }
         
@@ -119,11 +114,6 @@ class GoodTools {
                     echo 'Roms folder does not exists.'.NL;
                     $this->usage();
                 }
-                
-                /*if ( !array_key_exists( 'name', $options ) ) {
-                    echo 'The name is not defined.'.NL;
-                    $this->usage();
-                }*/
                 
                 break;
             }

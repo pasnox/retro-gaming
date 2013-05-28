@@ -17,9 +17,9 @@ CONFIG( udisks2 ) {
 CONFIG( udev_disk ) {
     DEFINES *= HAS_UDEV_DISK
     linux*:LIBS *= -ludev -lmount
-    linux-pandora-g++ {
-        INCLUDEPATH *= $${PANDORA_SDK_PATH}/opt/local/include
-        LIBS *= -L$${PANDORA_SDK_PATH}/opt/local/lib -lblkid
+    linux-open-pandora-g++ {
+        INCLUDEPATH *= $${CROSS_DEVICE_OPTWARES_PATH}/include
+        LIBS *= -L$${CROSS_DEVICE_OPTWARES_PATH}/lib -lblkid
     }
 }
 

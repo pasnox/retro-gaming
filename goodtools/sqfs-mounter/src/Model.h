@@ -38,6 +38,10 @@ public:
     virtual int rowCount( const QModelIndex& parent = QModelIndex() ) const;
     virtual QVariant data( const QModelIndex& index, int role = Qt::DisplayRole ) const;
 
+#if QT_VERSION >= 0x050000
+    virtual QHash<int, QByteArray> roleNames() const;
+#endif
+
     Q_INVOKABLE QVariant customData( int row, Model::CustomRole customRole ) const;
     Q_INVOKABLE bool mount( const QString& backingFile );
     Q_INVOKABLE bool umount( const QString& backingFile );

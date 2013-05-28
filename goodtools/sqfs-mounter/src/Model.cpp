@@ -19,6 +19,7 @@ Model::Model( Settings* settings, QObject* parent )
     Q_ASSERT( mManager );
     Q_ASSERT( mSettings );
 
+#if QT_VERSION < 0x050000
     QHash<int, QByteArray> names = roleNames();
 
     names[ Model::DecorationCustomRole ] = "customDecoration";
@@ -31,6 +32,7 @@ Model::Model( Settings* settings, QObject* parent )
     names[ Model::ToolTipCustomRole ] = "customToolTip";
 
     setRoleNames( names );
+#endif
 
     connect( mManager, SIGNAL( diskAdded( const QString& ) ), this, SLOT( imagesPathChanged() ) );
     connect( mManager, SIGNAL( diskChanged( const QString& ) ), this, SLOT( imagesPathChanged() ) );
@@ -98,6 +100,24 @@ QVariant Model::data( const QModelIndex& index, int role ) const
 
     return QVariant();
 }
+
+#if QT_VERSION >= 0x050000
+QHash<int, QByteArray> Model::roleNames() const
+{
+    QHash<int, QByteArray> names = QAbstractListModel::roleNames();
+
+    names[ Model::DecorationCustomRole ] = "customDecoration";
+    names[ Model::DecorationUrlCustomRole ] = "customDecorationUrl";
+    names[ Model::DisplayCustomRole ] = "customDisplay";
+    names[ Model::DeviceNameCustomRole ] = "customDeviceName";
+    names[ Model::BackingFileCustomRole ] = "customBackingFile";
+    names[ Model::IsMountedCustomRole ] = "customIsMounted";
+    names[ Model::MountPointsCustomRole ] = "customMountPoints";
+    names[ Model::ToolTipCustomRole ] = "customToolTip";
+
+    return names;
+}
+#endif
 
 QVariant Model::customData( int row, Model::CustomRole customRole ) const
 {
@@ -270,7 +290,8 @@ void Model::imagesPathChanged()
         newRows[ newKeys[ i ] ] = i;
     }
 
-    emit layoutAboutToBeChanged();
+    //emit layoutAboutToBeChanged();
+    beginResetModel();
 
     const QModelIndexList oldIndexes = persistentIndexList();
     QModelIndexList newIndexes;
@@ -285,7 +306,6 @@ void Model::imagesPathChanged()
     mItemsMapping = itemsMapping;
     changePersistentIndexList( oldIndexes, newIndexes );
 
-    emit layoutChanged();
-
-    reset();
+    //emit layoutChanged();
+    endResetModel();
 }

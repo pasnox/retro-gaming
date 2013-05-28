@@ -1,7 +1,13 @@
 #include "Settings.h"
+#include "ApplicationViewer.h"
+
+#if QT_VERSION < 0x050000
+#include <QDesktopServices>
+#else
+#include <QStandardPaths>
+#endif
 
 #include <QDir>
-#include <QDesktopServices>
 #include <QApplication>
 #include <QInputDialog>
 #include <QProcess>
@@ -16,6 +22,30 @@
 #define KEY_DISK_MANAGER_TYPE "Disk Manager/Type"
 #define KEY_MOUNT_PASSWORD "Mount/Password"
 #define KEY_ASK_PASS_PROGRAM "Mount/Ask Pass Program"
+
+class MainWindowHandler {
+public:
+    MainWindowHandler() {
+        _window = qobject_cast<ApplicationViewer*>( QApplication::activeWindow() );
+
+        if ( _window ) {
+            //_window->showNormal();
+        }
+    }
+
+    ~MainWindowHandler() {
+        if ( _window ) {
+            //_window->deviceShow();
+        }
+    }
+
+    ApplicationViewer* window() const {
+        return _window;
+    }
+
+private:
+    ApplicationViewer* _window;
+};
 
 Settings::Settings( QObject* parent )
     : QSettings( Settings::filePath(), QSettings::IniFormat, parent )
@@ -85,11 +115,12 @@ bool Settings::mount( const QString& backingFile )
 
     setMountPassword( password );*/
 
+    MainWindowHandler handler;
     QStringList arguments;
 
     if ( askPass.endsWith( "kdesudo", Qt::CaseInsensitive ) ) {
         arguments << "--attach";
-        arguments << QString::number( QApplication::activeWindow()->winId() );
+        arguments << QString::number( handler.window()->winId() );
     }
 
     arguments << QString( "mount -o loop,ro '%1' '%2'" ).arg( backingFile ).arg( Settings::mountPoint( backingFile ) );
@@ -119,11 +150,12 @@ bool Settings::umount( const QString& backingFile )
 
     setMountPassword( password );*/
 
+    MainWindowHandler handler;
     QStringList arguments;
 
     if ( askPass.endsWith( "kdesudo", Qt::CaseInsensitive ) ) {
         arguments << "--attach";
-        arguments << QString::number( QApplication::activeWindow()->winId() );
+        arguments << QString::number( handler.window()->winId() );
     }
 
     arguments << QString( "umount '%1'" ).arg( Settings::mountPoint( backingFile ) );
@@ -133,7 +165,8 @@ bool Settings::umount( const QString& backingFile )
 
 void Settings::requestUserImagesPath()
 {
-    const QString filePath = QFileDialog::getExistingDirectory( 0, tr( "Choose the path of your *.sqfs files" ), imagesPath() );
+    MainWindowHandler handler;
+    const QString filePath = QFileDialog::getExistingDirectory( handler.window(), tr( "Choose the path of your *.sqfs files" ), imagesPath() );
 
     if ( filePath.isNull() ) {
         return;
@@ -144,7 +177,8 @@ void Settings::requestUserImagesPath()
 
 void Settings::requestAskPassProgram()
 {
-    const QString program = QFileDialog::getOpenFileName( 0, tr( "Choose the askpass program" ), askPassProgram() );
+    MainWindowHandler handler;
+    const QString program = QFileDialog::getOpenFileName( handler.window(), tr( "Choose the askpass program" ), askPassProgram() );
 
     if ( program.isNull() ) {
         return;
@@ -162,9 +196,13 @@ QString Settings::realPath( const QString& filePath )
 QString Settings::filePath()
 {
     return QDir::cleanPath(
+#if QT_VERSION < 0x050000
         QDesktopServices::storageLocation( QDesktopServices::DataLocation )
+#else
+        QStandardPaths::writableLocation( QStandardPaths::DataLocation )
+#endif
             .append( "/settings.ini" )
-                );
+    );
 }
 
 QString Settings::mountPoint( const QString& backingFile )

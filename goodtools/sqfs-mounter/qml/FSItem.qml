@@ -45,6 +45,7 @@ Rectangle {
                     y: 0
                     height: 48
                     text: customDisplay
+                    font.bold: true
                     anchors.left: icon.right
                     anchors.leftMargin: 3
                     anchors.right: parent.right
@@ -52,9 +53,8 @@ Rectangle {
                     anchors.bottom: parent.bottom
                     anchors.bottomMargin: 0
                     wrapMode: Text.WordWrap
-                    font.pointSize: 7
+                    font.pointSize: 14
                     clip: true
-                    font.bold: true
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                     anchors.top: parent.top
